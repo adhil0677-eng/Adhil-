@@ -1,10 +1,8 @@
 # WriteAI
 
-Vercel-ready AI content writing toolkit.
+This is the final Vercel-ready project.
 
-## Required GitHub/Vercel Structure
-
-Upload these files at the root of your GitHub repository:
+## Files
 
 ```text
 index.html
@@ -14,33 +12,24 @@ api/
   generate.js
 ```
 
-Do not upload the zip file itself. Do not put these files inside another folder in GitHub unless you set that folder as the Vercel Root Directory.
+## Deploy
 
-## Vercel Environment Variable
-
-In Vercel project settings, add:
+1. Upload the contents of this folder to the root of your GitHub repository.
+2. Import the GitHub repository in Vercel.
+3. Add this Environment Variable in Vercel:
 
 ```text
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
-Then redeploy.
+4. Redeploy.
 
-## API Test
+## Test
 
-After deploy, open:
+Open:
 
 ```text
-https://your-site.vercel.app/api/generate
+https://your-vercel-domain.vercel.app/api/generate
 ```
 
-You should see JSON with:
-
-```json
-{
-  "ok": true,
-  "route": "/api/generate",
-  "message": "WriteAI API route is working",
-  "hasApiKey": true
-}
-```
+You should see JSON. If `hasApiKey` is `false`, the Vercel environment variable is missing.

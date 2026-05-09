@@ -2,11 +2,5 @@
   "name": "writeai",
   "version": "1.0.0",
   "private": true,
-  "description": "AI content writing toolkit for Vercel serverless deployment",
-  "scripts": {
-    "start": "vercel dev"
-  },
-  "engines": {
-    "node": ">=20"
-  }
+  "description": "AI content writing toolkit deployed with Vercel Serverless Functions"
 }
