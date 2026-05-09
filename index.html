@@ -1000,7 +1000,16 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompt })
       });
-      const data = await res.json();
+
+      const rawResponse = await res.text();
+      let data = {};
+
+      try {
+        data = rawResponse ? JSON.parse(rawResponse) : {};
+      } catch (error) {
+        throw new Error("API route did not return JSON. Make sure api/generate.js is uploaded and the project is deployed on Vercel, not GitHub Pages.");
+      }
+
       if (!res.ok) throw new Error(data.error || "Request failed");
       return data.content?.[0]?.text || 'No output. Try again.';
     }
