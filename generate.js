@@ -9,7 +9,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { prompt } = req.body;
+  const { prompt } = req.body || {};
   if (!prompt) return res.status(400).json({ error: 'No prompt provided' });
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(500).json({ error: 'ANTHROPIC_API_KEY is not configured' });
@@ -32,11 +32,13 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     if (!response.ok) {
-      return res.status(response.status).json({ error: data.error?.message || 'Anthropic API request failed' });
+      return res.status(response.status).json({
+        error: data.error?.message || data.message || `Anthropic API request failed with status ${response.status}`
+      });
     }
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: 'Error connecting to Anthropic API' });
+    res.status(500).json({ error: error.message || 'Error connecting to Anthropic API' });
   }
 }

@@ -1010,7 +1010,9 @@
         throw new Error("API route did not return JSON. Make sure api/generate.js is uploaded and the project is deployed on Vercel, not GitHub Pages.");
       }
 
-      if (!res.ok) throw new Error(data.error || "Request failed");
+      if (!res.ok) {
+        throw new Error(data.error || data.message || `Request failed with status ${res.status}`);
+      }
       return data.content?.[0]?.text || 'No output. Try again.';
     }
 
