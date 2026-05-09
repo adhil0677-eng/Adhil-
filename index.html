@@ -990,86 +990,16 @@
       generateText.textContent = isLoading ? "Generating..." : "Generate Content";
     }
 
-    function buildLocalOutput(tool, values) {
-      const today = new Date().toLocaleDateString("en-IN", {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      });
-
-      const hashtags = (base) => base
-        .split(/[,\s]+/)
-        .filter(Boolean)
-        .slice(0, 10)
-        .map((word) => `#${word.replace(/[^a-zA-Z0-9]/g, "")}`)
-        .filter((tag) => tag.length > 1)
-        .join(" ");
-
-      switch (tool.id) {
-        case "youtube-description":
-          return `Ready to learn everything about ${values.topic}?\n\nIn this video, we break down ${values.topic} in a simple, practical way for viewers interested in ${values.channel}. You will learn the key points, useful tips, common mistakes to avoid, and how to take action with confidence.\n\nTimestamps:\n00:00 Introduction\n00:30 Main idea\n02:00 Key tips\n04:00 Examples\n06:00 Final thoughts\n\nTarget keywords: ${values.keywords}\n\nIf this video helped you, like, comment, and subscribe for more ${values.channel} content.\n\n${hashtags(values.keywords)} #YouTube #LearnMore #Tips`;
-
-        case "youtube-title":
-          return `1. How to Master ${values.topic} Fast - Click-through score: High\n2. ${values.topic}: What Nobody Tells You - Click-through score: High\n3. The Smart Way to Understand ${values.topic} - Click-through score: Medium\n4. I Tried ${values.topic} and Here Is What Happened - Click-through score: High\n5. Top 5 Lessons About ${values.topic} - Click-through score: Medium\n6. Why ${values.topic} Matters More Than You Think - Click-through score: High\n7. The Beginner's Guide to ${values.topic} - Click-through score: Medium\n8. Stop Making These ${values.topic} Mistakes - Click-through score: High`;
-
-        case "instagram-caption":
-          return `Option 1\nStop scrolling - this one is worth it.\n\n${values.post}\n\nMade for people who love fresh, useful, and shareable content. Tell us what you think in the comments.\n\n${hashtags(values.accountType)} #Instagram #Content #ExplorePage #Trending #DailyPost\n\nOption 2\nA little moment, a big reason to notice.\n\n${values.post}\n\nSave this post if it inspired you, and share it with someone who needs to see it today.\n\n${hashtags(values.accountType)} #InstaDaily #ReelsIndia #CreativePost #BrandStory #ViralContent\n\nOption 3\nThis is your sign to take a closer look.\n\n${values.post}\n\nDM us for more details or comment below with your thoughts.\n\n${hashtags(values.accountType)} #SocialMedia #Growth #Community #NewPost #MadeWithCare`;
-
-        case "reel-short-script":
-          return `[HOOK]\n"${values.topic} - here is what you need to know in the next ${values.duration}."\n[Start with direct eye contact or bold text on screen]\n\n[BODY]\nPoint 1: Explain the main problem quickly.\nPoint 2: Show the simple solution or example.\nPoint 3: Give one practical tip viewers can use today.\n[Keep cuts fast, use captions, and show visual proof]\n\n[CTA]\n"Save this for later and follow for more quick tips."\n[End with logo, product shot, or strong final text]`;
-
-        case "whatsapp-broadcast":
-          return `Hi 👋\n\nWe have a quick update from ${values.business}.\n\n${values.purpose}\n\nThis is a great time to check it out, ask questions, or book before slots run out. We kept it simple, useful, and easy for you.\n\nReply to this message to know more or place your order today.`;
-
-        case "seo-meta-tags":
-          return `Title Tag:\n${values.keyword} | ${values.business}\n\nMeta Description:\nDiscover ${values.page} from ${values.business}. Learn more, compare options, and take the next step today.\n\nAlternative Titles:\n1. Best ${values.keyword} for ${values.business}\n2. ${values.page}: Complete Guide\n3. Trusted ${values.keyword} Solutions\n\nOpen Graph Title:\n${values.page} | ${values.business}\n\nOpen Graph Description:\nExplore ${values.page} with helpful details, clear benefits, and a simple next step.`;
-
-        case "blog-introduction":
-          return `Have you ever wondered why ${values.topic} feels harder than it should?\n\nFor ${values.audience}, the challenge is not just finding information. It is finding advice that is clear, practical, and easy to use. That is where this guide helps.\n\nIn this article, we will look at ${values.topic} in a simple way, break down what really matters, and show you how to move forward with more confidence. By the end, you will understand the key ideas, the common mistakes to avoid, and the next steps worth taking.`;
-
-        case "blog-outline":
-          return `SEO Title:\n${values.topic}: Complete Guide for Better Results\n\nMeta Description:\nLearn ${values.topic} with a clear outline, practical tips, and SEO-focused guidance around ${values.keyword}.\n\nH2: Introduction\n- Define the topic\n- Explain why it matters\n- Mention ${values.keyword} naturally\n\nH2: Key Concepts\nH3: What beginners should know\nH3: Common mistakes\n\nH2: Step-by-Step Guide\n- Practical actions\n- Examples\n- Tips for better results\n\nH2: Conclusion\n- Summarize the value\n- Add a clear next step\n\nInternal Linking Suggestions:\n- Link to related guides\n- Link to service or product pages\n- Link to FAQ content`;
-
-        case "keyword-ideas":
-          return Array.from({ length: 25 }, (_, index) => {
-            const number = index + 1;
-            const intent = number % 3 === 0 ? "transactional" : number % 2 === 0 ? "commercial" : "informational";
-            const competition = number % 4 === 0 ? "High" : number % 2 === 0 ? "Medium" : "Low";
-            return `${number}. ${values.niche} ${values.type.toLowerCase()} idea ${number} - Intent: ${intent} - Competition: ${competition} - Content idea: Create a helpful post answering a specific customer question.`;
-          }).join("\n");
-
-        case "product-description":
-          return `Meet ${values.product} - made to feel useful, beautiful, and worth choosing.\n\n${values.features}\n\nPerfect for ${values.platform}, this description focuses on real benefits, emotional value, and a clear reason to buy now. Limited availability makes it a smart pick today.\n\nOrder now or message us to know more.\n\nBullet Version:\n1. Premium feel with practical everyday value\n2. Designed around: ${values.features}\n3. Suitable for ${values.platform}\n4. ${values.tone} tone for stronger appeal\n5. Clear CTA: buy, enquire, or save today`;
-
-        case "cold-email":
-          return `Subject A: Quick idea for ${values.recipient}\n\nHi,\n\nI am ${values.sender}. I help with ${values.offer}.\n\nI noticed an opportunity that could be useful for ${values.recipient}. Would you be open to a quick reply so I can share the idea?\n\nBest,\n${values.sender}\n\nSubject B: Helping ${values.recipient} get better results\n\nHi,\n\nI am reaching out because ${values.offer} could help ${values.recipient} save time, improve results, or get more customers.\n\nThe idea is simple: clear value, no jargon, and one focused next step.\n\nWould you like to ${values.goal.toLowerCase()}?`;
-
-        case "offer-promo-text":
-          return `Short:\n${values.offer} is live now at ${values.business}. Grab it before it ends!\n\nMedium:\nGood news! ${values.business} is offering ${values.offer}. Perfect time to shop, book, or enquire. Message us today.\n\nLong:\nSpecial offer alert 🎁\n\n${values.offer}\n\nAvailable for ${values.platform}. This is a limited-time promo, so do not wait too long. Message us now to claim the offer or ask for details.`;
-
-        case "bio-about-us":
-          return `Short:\n${values.name} - ${values.what}. ${values.unique}. Message us to know more.\n\nMedium:\n${values.name} helps people with ${values.what}. What makes us different: ${values.unique}. Built for people who want quality, clarity, and a human touch.\n\nLong:\nWelcome to ${values.name}. We focus on ${values.what}, with a simple promise: make the experience clear, useful, and memorable. Our difference is ${values.unique}. Connect with us today for details, enquiries, or the next step.`;
-
-        default:
-          return `${tool.title}\nGenerated on ${today}\n\n${tool.buildPrompt(values)}`;
-      }
-    }
-
-    async function generateContent(prompt, values) {
+    async function generateContent(prompt) {
       if (window.location.protocol === "file:") {
-        return buildLocalOutput(activeTool, values);
+        throw new Error("Please deploy on Vercel or run with Vercel Dev. Real AI generation cannot work by opening index.html directly.");
       }
 
-      let res;
-      try {
-        res = await fetch('/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: prompt })
-        });
-      } catch (error) {
-        return buildLocalOutput(activeTool, values);
-      }
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt })
+      });
 
       const rawResponse = await res.text();
       let data = {};
@@ -1077,17 +1007,17 @@
       try {
         data = rawResponse ? JSON.parse(rawResponse) : {};
       } catch (error) {
-        return buildLocalOutput(activeTool, values);
+        throw new Error("The AI API route returned HTML instead of JSON. Upload the api folder to GitHub root and deploy on Vercel.");
       }
 
       if (res.status === 405) {
-        return buildLocalOutput(activeTool, values);
+        throw new Error("The /api/generate route is not accepting POST requests. Deploy the full project on Vercel with the api folder at GitHub root.");
       }
 
       if (!res.ok) {
-        return buildLocalOutput(activeTool, values);
+        throw new Error(data.error || data.message || `AI request failed with status ${res.status}`);
       }
-      return data.content?.[0]?.text || buildLocalOutput(activeTool, values);
+      return data.content?.[0]?.text || 'No output. Try again.';
     }
 
     toolForm.addEventListener("submit", async (event) => {
@@ -1105,7 +1035,7 @@
 
       try {
         const prompt = activeTool.buildPrompt(values);
-        const text = await generateContent(prompt, values);
+        const text = await generateContent(prompt);
         outputContent.textContent = text;
         outputBox.classList.remove("show");
         requestAnimationFrame(() => {
@@ -1113,11 +1043,7 @@
         });
       } catch (error) {
         outputBox.classList.remove("show");
-        if (error.message === "FILE_PROTOCOL") {
-          showError("This app must run through Vercel or a local server. Opening index.html directly cannot run /api/generate.");
-        } else {
-          showError(error.message || "Error connecting to AI. Please try again.");
-        }
+        showError(error.message || "Error connecting to AI. Please try again.");
       } finally {
         setLoading(false);
       }

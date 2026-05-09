@@ -1,34 +1,47 @@
-# WriteAI
+# WriteAI Real AI Version
 
-Final Vercel-ready AI content writing toolkit.
+This version generates new content using a real AI API.
 
-The app tries to use Claude through `/api/generate`. If the API route is not available yet, the frontend automatically uses a built-in content generator so the toolkit still works instead of showing an error.
+## AI Provider
 
-## Files
+- If `ANTHROPIC_API_KEY` is added in Vercel, it uses Claude.
+- If no key is added, it uses free Pollinations AI through the backend.
+
+The frontend never calls AI providers directly. It only calls:
+
+```text
+/api/generate
+```
+
+## Required Files
 
 Upload these files at the root of your GitHub repository:
 
 ```text
+.gitignore
 index.html
 package.json
+README.md
 vercel.json
-.gitignore
 api/
   generate.js
 ```
 
-## Vercel Setup
+## Deploy On Vercel
 
-1. Import the GitHub repository in Vercel.
-2. Add this Environment Variable in Vercel:
+1. Upload the contents of this folder to GitHub root.
+2. Import the repo in Vercel.
+3. Deploy.
+
+Optional Claude setup:
 
 ```text
-ANTHROPIC_API_KEY=your_anthropic_api_key
+ANTHROPIC_API_KEY=your_anthropic_key
 ```
 
-3. Redeploy.
+If you do not add this key, the app will still use Pollinations AI.
 
-## API Test
+## Test API
 
 Open:
 
@@ -36,6 +49,4 @@ Open:
 https://your-vercel-domain.vercel.app/api/generate
 ```
 
-You should see JSON. If `hasApiKey` is `false`, the Vercel environment variable is missing.
-
-The frontend will still generate content using the built-in fallback if the live AI route is unavailable.
+You should see JSON with `ok: true` and provider info.

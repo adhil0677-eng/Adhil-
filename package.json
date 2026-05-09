@@ -2,7 +2,7 @@
   "name": "writeai",
   "version": "1.0.0",
   "private": true,
-  "description": "AI content writing toolkit deployed with Vercel Serverless Functions",
+  "description": "AI content writing toolkit with free Pollinations AI and optional Claude support",
   "scripts": {
     "dev": "vercel dev"
   },
