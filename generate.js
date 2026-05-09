@@ -7,7 +7,17 @@
 // 4. Deploy — your site will be live with API key safely hidden
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method === 'GET') {
+    return res.status(200).json({
+      ok: true,
+      message: 'WriteAI API route is working',
+      hasApiKey: Boolean(process.env.ANTHROPIC_API_KEY)
+    });
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: `Method ${req.method} not allowed. Use POST.` });
+  }
 
   const { prompt } = req.body || {};
   if (!prompt) return res.status(400).json({ error: 'No prompt provided' });

@@ -1010,6 +1010,10 @@
         throw new Error("API route did not return JSON. Make sure api/generate.js is uploaded and the project is deployed on Vercel, not GitHub Pages.");
       }
 
+      if (res.status === 405) {
+        throw new Error("The /api/generate route is not accepting POST requests. This usually means the site is running on static hosting. Deploy the full project on Vercel and redeploy after uploading api/generate.js.");
+      }
+
       if (!res.ok) {
         throw new Error(data.error || data.message || `Request failed with status ${res.status}`);
       }
