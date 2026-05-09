@@ -6,10 +6,13 @@
 //    Value: your Anthropic API key from console.anthropic.com
 // 4. Deploy — your site will be live with API key safely hidden
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+
   if (req.method === 'GET') {
     return res.status(200).json({
       ok: true,
+      route: '/api/generate',
       message: 'WriteAI API route is working',
       hasApiKey: Boolean(process.env.ANTHROPIC_API_KEY)
     });
@@ -20,9 +23,14 @@ export default async function handler(req, res) {
   }
 
   const { prompt } = req.body || {};
-  if (!prompt) return res.status(400).json({ error: 'No prompt provided' });
+  if (!prompt) {
+    return res.status(400).json({ error: 'No prompt provided' });
+  }
+
   if (!process.env.ANTHROPIC_API_KEY) {
-    return res.status(500).json({ error: 'ANTHROPIC_API_KEY is not configured' });
+    return res.status(500).json({
+      error: 'ANTHROPIC_API_KEY is not configured in Vercel Environment Variables'
+    });
   }
 
   try {
@@ -41,14 +49,17 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+
     if (!response.ok) {
       return res.status(response.status).json({
         error: data.error?.message || data.message || `Anthropic API request failed with status ${response.status}`
       });
     }
 
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: error.message || 'Error connecting to Anthropic API' });
+    return res.status(500).json({
+      error: error.message || 'Error connecting to Anthropic API'
+    });
   }
-}
+};
