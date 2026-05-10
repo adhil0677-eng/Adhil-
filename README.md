@@ -1,6 +1,6 @@
 # WriteAI
 
-Vercel-ready AI content writing toolkit using Anthropic Claude through a protected serverless API route.
+Vercel-ready AI content writing toolkit.
 
 ## Files
 
@@ -16,12 +16,24 @@ api/
   generate.js
 ```
 
-## Required Vercel Environment Variable
+## AI Provider
 
-Add this in Vercel Project Settings → Environment Variables:
+This project works without a paid key by using free Pollinations AI from the backend.
+
+Optional: add this in Vercel Project Settings → Environment Variables to use Claude instead:
 
 ```text
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
 
 Then redeploy the project.
+
+## Test
+
+After deployment, open:
+
+```text
+https://your-vercel-domain.vercel.app/api/generate
+```
+
+You should see JSON with `ok: true` and a provider name.

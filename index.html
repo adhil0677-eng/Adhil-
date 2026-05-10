@@ -997,11 +997,19 @@
         body: JSON.stringify({ prompt: prompt })
       });
 
-      if (!res.ok) {
-        throw new Error('API error');
+      const rawResponse = await res.text();
+      let data = {};
+
+      try {
+        data = rawResponse ? JSON.parse(rawResponse) : {};
+      } catch (error) {
+        throw new Error("API route returned a non-JSON response. Redeploy the latest files on Vercel.");
       }
 
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.details || data.error || 'API error');
+      }
+
       const text = data.content?.[0]?.text || 'No output. Try again.';
       return text;
     }
@@ -1029,7 +1037,7 @@
         });
       } catch (error) {
         outputBox.classList.remove("show");
-        showError("Something went wrong. Please try again.");
+        showError(error.message || "Something went wrong. Please try again.");
       } finally {
         setLoading(false);
       }
