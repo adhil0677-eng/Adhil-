@@ -991,33 +991,19 @@
     }
 
     async function generateContent(prompt) {
-      if (window.location.protocol === "file:") {
-        throw new Error("Please deploy on Vercel or run with Vercel Dev. Real AI generation cannot work by opening index.html directly.");
-      }
-
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompt })
       });
 
-      const rawResponse = await res.text();
-      let data = {};
-
-      try {
-        data = rawResponse ? JSON.parse(rawResponse) : {};
-      } catch (error) {
-        throw new Error("The AI API route returned HTML instead of JSON. Upload the api folder to GitHub root and deploy on Vercel.");
-      }
-
-      if (res.status === 405) {
-        throw new Error("The /api/generate route is not accepting POST requests. Deploy the full project on Vercel with the api folder at GitHub root.");
-      }
-
       if (!res.ok) {
-        throw new Error(data.error || data.message || `AI request failed with status ${res.status}`);
+        throw new Error('API error');
       }
-      return data.content?.[0]?.text || 'No output. Try again.';
+
+      const data = await res.json();
+      const text = data.content?.[0]?.text || 'No output. Try again.';
+      return text;
     }
 
     toolForm.addEventListener("submit", async (event) => {
@@ -1043,7 +1029,7 @@
         });
       } catch (error) {
         outputBox.classList.remove("show");
-        showError(error.message || "Error connecting to AI. Please try again.");
+        showError("Something went wrong. Please try again.");
       } finally {
         setLoading(false);
       }
